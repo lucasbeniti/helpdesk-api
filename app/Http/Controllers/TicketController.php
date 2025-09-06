@@ -42,6 +42,8 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket): JsonResponse
     {
+        $this->authorize('view', $ticket);
+
         return response()->json([
             'success' => true,
             'data' => new TicketResource($ticket)
@@ -50,6 +52,8 @@ class TicketController extends Controller
 
     public function update(UpdateTicketRequest $request, Ticket $ticket): JsonResponse
     {   
+        $this->authorize('update', $ticket);
+
         $ticket->update($request->validated());
 
         return response()->json([
@@ -60,6 +64,8 @@ class TicketController extends Controller
 
     public function destroy(Ticket $ticket): JsonResponse
     {
+        $this->authorize('delete', $ticket);
+
         $ticket->delete();
         
         return response()->json([
