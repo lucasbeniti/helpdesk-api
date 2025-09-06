@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Http\Resources\TicketResource;
 use App\Models\Ticket;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class TicketController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => ['tickets' => $tickets]
+            'data' => TicketResource::collection($tickets)
         ], 200);
     }
 
@@ -42,7 +43,7 @@ class TicketController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => ['ticket' => $ticket]
+            'data' => new TicketResource($ticket)
         ], 201);
     }
 
@@ -50,7 +51,7 @@ class TicketController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => ['ticket' => $ticket]
+            'data' => new TicketResource($ticket)
         ], 200);
     }
 
@@ -60,7 +61,7 @@ class TicketController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => ['ticket' => $ticket]
+            'data' => new TicketResource($ticket)
         ], 200);
     }
 
