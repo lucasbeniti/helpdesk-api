@@ -19,4 +19,22 @@ class Ticket extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopeStatus($query, $status)
+    {
+        if ($status) {
+            return $query->where('status');
+        }
+
+        return $query;
+    }
+
+    public function scopePriority($query, $priority)
+    {
+        if ($priority) {
+            return $query->where('priority');
+        }
+
+        return $query;
+    }
 }

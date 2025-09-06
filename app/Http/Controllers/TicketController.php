@@ -13,17 +13,10 @@ class TicketController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Ticket::where('user_id', $request->user()->id);
-
-        if ($request->status) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->priority) {
-            $query->where('priority', $request->priority);
-        }
-
-        $tickets = $query->paginate(10);
+        $tickets = Ticket::where('user_id', $request->user()->id)
+            ->status($request->status)
+            ->priority($request->priority)
+            ->paginate(10);
 
         return response()->json([
             'success' => true,
