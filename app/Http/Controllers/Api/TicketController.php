@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
@@ -9,7 +9,7 @@ use App\Models\Ticket;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class TicketController extends Controller
+class TicketController extends ApiController
 {
     public function index(Request $request): JsonResponse
     {
@@ -18,10 +18,7 @@ class TicketController extends Controller
             ->priority($request->priority)
             ->paginate(10);
 
-        return response()->json([
-            'success' => true,
-            'data' => TicketResource::collection($tickets)
-        ], 200);
+        return $this->successResponse(['tickets' => TicketResource::collection($tickets)], '', 200);
     }
 
     public function store(StoreTicketRequest $request): JsonResponse
@@ -34,20 +31,14 @@ class TicketController extends Controller
             'user_id' => $request->user()->id
         ]);
 
-        return response()->json([
-            'success' => true,
-            'data' => new TicketResource($ticket)
-        ], 201);
+        return $this->successResponse(['ticket' => new TicketResource($ticket)], 'Ticket criado com sucesso', 201);
     }
 
     public function show(Ticket $ticket): JsonResponse
     {
         $this->authorize('view', $ticket);
 
-        return response()->json([
-            'success' => true,
-            'data' => new TicketResource($ticket)
-        ], 200);
+        return $this->successResponse(['ticket' => new TicketResource($ticket)], 200);
     }
 
     public function update(UpdateTicketRequest $request, Ticket $ticket): JsonResponse
@@ -56,10 +47,7 @@ class TicketController extends Controller
 
         $ticket->update($request->validated());
 
-        return response()->json([
-            'success' => true,
-            'data' => new TicketResource($ticket)
-        ], 200);
+        return $this->successResponse(['ticket' => new TicketResource($ticket)], 'Ticket atualizado com sucesso', 200);
     }
 
     public function destroy(Ticket $ticket): JsonResponse
@@ -68,9 +56,6 @@ class TicketController extends Controller
 
         $ticket->delete();
         
-        return response()->json([
-            'success' => true,
-            'message' => 'Ticket deletado com sucesso'
-        ], 200);
+        return $this->successResponse([], 'Ticket deletado com sucesso', 200);
     }
 }
