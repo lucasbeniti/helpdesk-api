@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use Illuminate\Http\JsonResponse;
@@ -17,13 +19,8 @@ class CommentController extends ApiController
         return $this->successResponse(['comments' => CommentResource::collection($comments)], 200);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreCommentRequest $request): JsonResponse
     {
-        $request->validate([
-            'content' => 'string|max:255|required',
-            'ticket_id' => 'required|exists:tickets,id'
-        ]);
-
         $comment = Comment::create([
             'content' => $request->content,
             'ticket_id' => $request->ticket_id,
@@ -38,13 +35,8 @@ class CommentController extends ApiController
         return $this->successResponse(['comment' => new CommentResource($comment)], 200);
     }
 
-    public function update(Request $request, Comment $comment): JsonResponse
+    public function update(UpdateCommentRequest $request, Comment $comment): JsonResponse
     {
-        $request->validate([
-            'content' => 'string|max:255|required',
-            'ticket_id' => 'required|exists:tickets,id'
-        ]);
-
         $comment = Comment::update([
             'content' => $request->content,
             'ticket_id' => $request->ticket_id
